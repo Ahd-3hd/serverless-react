@@ -1,0 +1,40 @@
+app: testingreact
+service: testingreact
+frameworkVersion: "2"
+provider:
+  httpApi:
+    cors: true
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  timeout: 28
+  apiGateway:
+    usagePlan:
+      quota:
+        limit: 864000000
+        offset: 0
+        period: DAY
+      throttle:
+        burstLimit: 1000
+        rateLimit: 1000
+configValidationMode: error
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+
+package:
+  excludeDevDependencies: true
+
+functions:
+  myapp:
+    handler: src/server/index.handler
+    events:
+      - httpApi:
+          path: /
+          method: "*"
